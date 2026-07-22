@@ -1,0 +1,35 @@
+name: tinycanvas_adventures
+description: >-
+  TinyCanvas Adventures - an offline-first children's coloring studio for
+  Amazon Fire OS tablets. Local-only, accountless, ad-free.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Local structured storage (platform-neutral, works on Fire OS).
+  sqflite: ^2.3.2
+  path: ^1.9.0
+  path_provider: ^2.1.2
+  # Lightweight, stable state management.
+  provider: ^6.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  # Runs sqflite against an in-memory SQLite for database/migration tests.
+  sqflite_common_ffi: ^2.3.2
+  integration_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/catalog/catalog_manifest.json
+    - ASSET_MANIFEST.json
