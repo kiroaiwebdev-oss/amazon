@@ -1,0 +1,62 @@
+# TinyCanvas Adventures - automatic APK build (GitHub Actions)
+#
+# Runs on every push to main, or manually from the Actions tab
+# (Run workflow button). Produces debug + release APKs as a
+# downloadable artifact named "tinycanvas-apks".
+#
+# No local setup needed - GitHub's servers install Flutter, run
+# analyze/tests, and build the APKs.
+
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter (stable)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze (report only)
+        continue-on-error: true
+        run: flutter analyze
+
+      - name: Run tests (report only)
+        continue-on-error: true
+        run: flutter test
+
+      - name: Build debug APK
+        run: flutter build apk --debug
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: tinycanvas-apks
+          path: build/app/outputs/flutter-apk/*.apk
+          if-no-files-found: error
